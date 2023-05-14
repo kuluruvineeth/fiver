@@ -5,9 +5,11 @@ import Image from "next/image";
 import axios from "axios";
 import { SET_USER_INFO, SET_USER_IMAGE, HOST } from "@/utils/constants";
 import { reducerCases } from "@/context/constants";
+import { useCookies } from "react-cookie";
 
 function profile() {
   const router = useRouter();
+  const [cookies] = useCookies();
   const [{ userInfo }, dispatch] = useStateProvider();
   const [isLoaded, setIsLoaded] = useState(false);
   const [imageHover, setImageHover] = useState(false);
@@ -61,7 +63,11 @@ function profile() {
       const response = await axios.post(
         SET_USER_INFO,
         { ...data },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.jwt}`,
+          },
+        }
       );
       if (response.data.userNameError) {
         setErrorMessage("Enter a Unique Username");
@@ -74,9 +80,9 @@ function profile() {
           const {
             data: { img },
           } = await axios.post(SET_USER_IMAGE, formData, {
-            withCredentials: true,
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${cookies.jwt}`,
             },
           });
           imageName = img;

@@ -4,9 +4,11 @@ import { ADD_GIG_ROUTE } from "@/utils/constants";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useCookies } from "react-cookie";
 
 function create() {
   const router = useRouter();
+  const [cookies] = useCookies();
   const [files, setFile] = useState([]);
   const [features, setFeatures] = useState([]);
   const [data, setData] = useState({
@@ -67,6 +69,9 @@ function create() {
       const response = await axios.post(ADD_GIG_ROUTE, formData, {
         withCredentials: true,
         params: gigData,
+        headers: {
+          Authorization: `Bearer ${cookies.jwt}`,
+        },
       });
       if (response.status === 201) {
         router.push("/seller/gigs");

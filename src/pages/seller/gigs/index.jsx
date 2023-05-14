@@ -2,16 +2,20 @@ import { GET_USER_GIGS_ROUTE } from "@/utils/constants";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 function Index() {
   const [gigs, setGigs] = useState([]);
+  const [cookies] = useCookies();
   useEffect(() => {
     const getUserGigs = async () => {
       try {
         const {
           data: { gigs: gigsData },
         } = await axios.get(GET_USER_GIGS_ROUTE, {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${cookies.jwt}`,
+          },
         });
         setGigs(gigsData);
       } catch (err) {
