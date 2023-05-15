@@ -75,9 +75,29 @@ export const getGigsData = async (req, res, next) => {
       const prisma = new PrismaClient();
       const gig = await prisma.gigs.findUnique({
         where: { id: parseInt(req.params.gigid) },
-        include: { createdBy: true },
+        include: { createdBy: true, reviews: { include: { reviewer: true } } },
       });
-      return res.status(200).json({ gig });
+
+      const userWithGigs = await prisma.user.findUnique({
+        where: { id: gig.createdBy.id },
+        include: { gigs: { include: { reviews: true } } },
+      });
+
+      const totalReviews = userWithGigs.gigs.reduce(
+        (acc, gig) => acc + gig.reviews.length,
+        0
+      );
+
+      const averageRating = (
+        userWithGigs.gigs.reduce(
+          (acc, gig) =>
+            acc + gig.reviews.reduce((sum, review) => sum + review.rating, 0),
+          0
+        ) / totalReviews
+      ).toFixed(1);
+      return res
+        .status(200)
+        .json({ gig: { ...gig, totalReviews, averageRating } });
     }
     return res.status(400).send("Gigid is required");
   } catch (err) {
@@ -165,11 +185,11 @@ const createSearchQuery = (searchTerm, category) => {
       OR: [],
     },
     include: {
-      // reviews: {
-      //   include: {
-      //     reviewer: true,
-      //   },
-      // },
+      reviews: {
+        include: {
+          reviewer: true,
+        },
+      },
       createdBy: true,
     },
   };
@@ -184,4 +204,67 @@ const createSearchQuery = (searchTerm, category) => {
     });
   }
   return query;
+};
+
+const checkOrder = async (userId, gigId) => {
+  try {
+    const prisma = new PrismaClient();
+    const hasUserOrderedGig = await prisma.orders.findFirst({
+      where: {
+        buyerId: parseInt(userId),
+        gigId: parseInt(gigId),
+        isCompleted: true,
+      },
+    });
+    return hasUserOrderedGig;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const checkGigOrder = async (req, res, next) => {
+  try {
+    if (req.userId && req.params.gigid) {
+      const hasUserOrderedGig = await checkOrder(req.userId, req.params.gigid);
+      return res
+        .status(200)
+        .json({ hasUserOrderedGig: hasUserOrderedGig ? true : false });
+    }
+    return res.status(400).send("userId and gigId is required.");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+export const addReview = async (req, res, next) => {
+  try {
+    if (req.userId && req.params.gigid) {
+      if (await checkOrder(req.userId, req.params.gigid)) {
+        if (req.body.reviewText && req.body.rating) {
+          const prisma = new PrismaClient();
+          const newReview = await prisma.reviews.create({
+            data: {
+              rating: req.body.rating,
+              reviewText: req.body.reviewText,
+              reviewer: { connect: { id: parseInt(req?.userId) } },
+              gig: { connect: { id: parseInt(req.params.gigid) } },
+            },
+            include: {
+              reviewer: true,
+            },
+          });
+          return res.status(201).json({ newReview });
+        }
+        return res.status(400).send("ReviewText and Rating are required.");
+      }
+      return res
+        .status(400)
+        .send("You need to purchase the gig in order to add review.");
+    }
+    return res.status(400).send("userId and gigid is required.");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Internal Server Error");
+  }
 };

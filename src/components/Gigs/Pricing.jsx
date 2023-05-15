@@ -51,7 +51,7 @@ function Pricing() {
             ) : (
               <button
                 className="flex items-center bg-[#1DBF73] text-white py-2 justify-center font-bold text-lg relative rounded"
-                onClick={() => router.push(`/checkout?gigId=${gigData.id}`)}
+                onClick={() => router.push(`/checkout?gigid=${gigData.id}`)}
               >
                 <span>Continue</span>
                 <BiRightArrowAlt className="text-2xl absolute right-4" />

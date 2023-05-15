@@ -3,6 +3,8 @@ import { verifyToken } from "../middlewares/AuthMiddleware.js";
 import { Router } from "express";
 import {
   addGig,
+  addReview,
+  checkGigOrder,
   editGig,
   getGigsData,
   getUserAuthGigs,
@@ -22,3 +24,5 @@ gigsRoutes.put(
   editGig
 );
 gigsRoutes.get("/search-gigs", searchGigs);
+gigsRoutes.get("/check-gig-order/:gigid", verifyToken, checkGigOrder);
+gigsRoutes.post("/add-review/:gigid", verifyToken, addReview);

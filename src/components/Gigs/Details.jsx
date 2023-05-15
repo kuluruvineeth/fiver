@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-// import AddReview from "@/components/Gigs/AddReview";
-// import Reviews from "@/components/Gigs/Reviews";
+import AddReview from "@/components/Gigs/AddReview";
+import Reviews from "@/components/Gigs/Reviews";
 import { FaStar } from "react-icons/fa";
 import { useStateProvider } from "@/context/StateContext";
 import { HOST } from "@/utils/constants";
@@ -17,13 +17,13 @@ function Details() {
   }, [gigData]);
 
   const [averageRatings, setAverageRatings] = useState("0");
-  //   useEffect(() => {
-  //     if (gigData && gigData.reviews.length) {
-  //       let avgRating = 0;
-  //       gigData.reviews.forEach(({ rating }) => (avgRating += rating));
-  //       setAverageRatings((avgRating / gigData.reviews.length).toFixed(1));
-  //     }
-  //   }, [gigData]);
+  useEffect(() => {
+    if (gigData && gigData.reviews.length) {
+      let avgRating = 0;
+      gigData.reviews.forEach(({ rating }) => (avgRating += rating));
+      setAverageRatings((avgRating / gigData.reviews.length).toFixed(1));
+    }
+  }, [gigData]);
 
   return (
     <>
@@ -170,8 +170,8 @@ function Details() {
               </div>
             </div>
           </div>
-          {/* <Reviews />
-          {hasOrdered && <AddReview />} */}
+          <Reviews />
+          {hasOrdered && <AddReview />}
         </div>
       )}
     </>

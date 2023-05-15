@@ -34,6 +34,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.14.0.tgz#4bed9e6f3d01bb0e4598e76c1726f33579d6a2c3"
   integrity sha512-PDNlhP/1vyTgmNyiucGqGCdXIp7HIkkvKO50si3y3PcceeHvqtiKPaH1iJdz63jCWMVMbj2MElSxXPOeBvEVIQ==
 
+"@types/node@>=8.1.0":
+  version "20.1.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.1.4.tgz#83f148d2d1f5fe6add4c53358ba00d97fc4cdb71"
+  integrity sha512-At4pvmIOki8yuwLtd7BNHl3CiWNbtclUbNtScGx4OHfBd4/oWoJC8KRCIxXwkdndzhxOsPXihrsOoydxBjlE9Q==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -867,6 +872,13 @@ qs@6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
+qs@^6.11.0:
+  version "6.11.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.1.tgz#6c29dff97f0c0060765911ba65cbc9764186109f"
+  integrity sha512-0wsrzgTz/kAVIeuxSjnpGC56rzYtr6JT/2BwEvMaPhFIoYa1aGO8LbzuU1R0uUYQkLpWBTOj0l/CLAJB64J6nQ==
+  dependencies:
+    side-channel "^1.0.4"
+
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -1054,6 +1066,14 @@ strip-ansi@^6.0.1:
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
   dependencies:
     ansi-regex "^5.0.1"
+
+stripe@^12.5.0:
+  version "12.5.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-12.5.0.tgz#965168a87103a985fac950a7184a71bb107ac904"
+  integrity sha512-eDBh4bv+Uo+GdhjnQ246lM5KaOReoBzxFltgW0HJqco/QEAgSYxZPOpFbd5+gJnZlRqHSB5B+Zqw273SlbdPag==
+  dependencies:
+    "@types/node" ">=8.1.0"
+    qs "^6.11.0"
 
 supports-color@^5.5.0:
   version "5.5.0"
